@@ -4,6 +4,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../views/Home';
 import Profile from '../views/Profile';
 import Single from '../views/Single';
+import Login from '../views/Login';
+import {useUserContext} from '../hooks/contextHooks';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -18,6 +20,7 @@ const TabNavigator = () => {
 };
 
 const StackNavigator = () => {
+  const {user} = useUserContext();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -25,7 +28,11 @@ const StackNavigator = () => {
         component={TabNavigator}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="Single Media" component={Single as any} />
+      {user ? (
+        <Stack.Screen name="Single Media" component={Single as any} />
+      ) : (
+        <Stack.Screen name="login" component={Login} />
+      )}
     </Stack.Navigator>
   );
 };
