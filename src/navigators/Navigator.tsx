@@ -6,6 +6,7 @@ import Profile from '../views/Profile';
 import Single from '../views/Single';
 import Login from '../views/Login';
 import {useUserContext} from '../hooks/contextHooks';
+import MyFiles from '../views/MyFiles';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -29,7 +30,10 @@ const StackNavigator = () => {
         options={{headerShown: false}}
       />
       {user ? (
-        <Stack.Screen name="Single Media" component={Single as any} />
+        <>
+          <Stack.Screen name="Single Media" component={Single as any} />
+          <Stack.Screen name="My Files" component={MyFiles} />
+        </>
       ) : (
         <Stack.Screen name="login" component={Login} />
       )}
