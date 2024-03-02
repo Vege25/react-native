@@ -16,9 +16,11 @@ import {
   UploadResponse,
   UserResponse,
 } from '../types/MessageTypes';
+import {useUpdateContext} from './UpdateHook';
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState<MediaItemWithOwner[]>([]);
+  const {update} = useUpdateContext();
 
   const getMedia = async () => {
     try {
@@ -38,8 +40,8 @@ const useMedia = () => {
           return itemWithOwner;
         }),
       );
+      itemsWithOwner.reverse();
       setMediaArray(itemsWithOwner);
-      console.log('mediaArray updated:', itemsWithOwner);
     } catch (error) {
       console.error('getMedia failed', error);
     }
@@ -47,7 +49,7 @@ const useMedia = () => {
 
   useEffect(() => {
     getMedia();
-  }, []);
+  }, [update]);
 
   const postMedia = (
     file: UploadResponse,
@@ -83,7 +85,25 @@ const useMedia = () => {
     );
   };
 
-  return {mediaArray, postMedia};
+  const putMedia = async (
+    inputs: Pick<MediaItem, 'title' | 'description'>,
+    token: string,
+    media_id: number,
+  ) => {
+    return await fetchData<MessageResponse>(
+      process.env.EXPO_PUBLIC_MEDIA_API + '/media/' + media_id,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputs),
+      },
+    );
+  };
+
+  return {mediaArray, postMedia, putMedia};
 };
 
 const useUser = () => {
@@ -192,7 +212,6 @@ const useFile = () => {
         },
       },
     );
-    // TODO: hide loading indicator
     return JSON.parse(fileResult.body);
   };
 
