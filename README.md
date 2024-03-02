@@ -1,4 +1,4 @@
 # react-native
 ## Screenshots
-![Login](screenshots/Login.png)
-![Register](screenshots/Register.png)
+![Login](screenshots/Login.jpg)
+![Register](screenshots/Register.jpg)
